@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+
+        function formatCurrency (locales, currency, fractionDigits, number) {
+            var formatted = new Intl.NumberFormat(locales, {
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: fractionDigits
+            }).format(number);
+            return formatted;
+        }
+
+        function editarCliente(idClient) {
+            window.location.href = "editClient?id="+idClient;
+        }
+
+        function agregarCleinte(idClient) {
+            window.location.href = "addClient"
+        }
+
+        function eliminarCliente(idClient) {
+            if (confirm("Eliminara un registro, ¿esta seguro?")) {
+                window.location.href = "deleteClient?id="+idClient;
+            }
+
+        }
+
+        function buscar(idClient) {
+            if(idClient != "null"){
+                window.location.href = "findById?id="+idClient;
+            }else{
+                alert("Debe ingresar un id de cliente")
+            }
+        }
+    </script>
+</head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <label for="idCliente">Id Cliente</label>
+                </div>
+                <div class="col-sm-2">
+                    <input id="idCliente" type="text" class="form-control" placeholder="Id Cliente">
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary" th:attr="onclick=|buscar(idCliente.value)|">Buscar</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col"> Id </th>
+                                <th scope="col"> Nombre </th>
+                                <th scope="col"> Apellido Paterno </th>
+                                <th scope="col"> Ingresos </th>
+                                <th scope="col"> Fecha Nacimiento </th>
+                                <th scope="col"> Acciones </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${clients.empty}">
+                                <td colspan="2"> No Clients Available </td>
+                            </tr>
+                            <tr th:each="client : ${clients}">
+                                <td><span th:text="${client.id}"> Id </span></td>
+                                <td><span th:text="${client.nombre}"> Nombre </span></td>
+                                <td><span th:text="${client.apellidoPaterno}"> Apellido Paterno </span></td>
+                                <td><span th:text="${client.ingresos}"> Ingresos </span></td>
+                                <!--td><span th:text="#numbers.formatDecimal(${client.ingresos, 0, 'COMMA', 2, 'POINT')}" > Ingresos </span></td-->
+                                <td>
+                                    <!--span th:text="${#dates.format(client.fechaNacimiento, 'yyyy/MM/dd')}"> Fecha Nacimiento </span-->
+                                    <span th:text="${client.fechaNacimiento}"> Fecha Nacimiento </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-succes btn-lg" th:attr="onclick=|editarCliente('${client.id}')|">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-lg" th:attr="onclick=|eliminarCliente('${client.id}')|" >
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-primary btn-lg" th:attr="onclick=|agregarCleinte()|" >
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
